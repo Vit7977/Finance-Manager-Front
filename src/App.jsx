@@ -4,12 +4,10 @@ import Login from "./pages/Login.jsx"
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index path="/login" element={<Login/>} />
-      </Routes>
-    </BrowserRouter>
-  )
+      <div>
+        <h1>Home</h1>
+      </div>
+    )
 }
 
 export default App
