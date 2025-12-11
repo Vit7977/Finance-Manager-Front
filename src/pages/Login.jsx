@@ -1,16 +1,31 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [dados, setDados] = useState([])
+
+    const navigate = useNavigate();
 
     const togglePassword = () => {
         setShowPassword(!showPassword);
     }
 
-     const handleSubmit = (e) => {
+     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Formulário enviado!");
+        setLoading(true)
+        try{
+            await axios.post('http://localhost:9099/api/user/login', dados);
+            alert('Logado(a) com sucesso!');
+            navigate('/');
+        }catch(error){
+            alert('Erro de login: ' + (error.response?.data?.message || error.message));
+        }finally{
+            setLoading(false);
+        }
     }
 
     return (
@@ -28,6 +43,7 @@ function Login() {
                         className="outline-none border-b-2 border-white bg-transparent text-white placeholder-gray-300 transition-all duration-300 focus:border-lime-600 w-full px-2 py-1"
                         type="email"
                         placeholder="meuemail@exemplo.com"
+                        onChange={(e) => setDados({ ...dados, email: e.target.value })}
                         required
                         />
 
@@ -38,6 +54,7 @@ function Login() {
                             className="outline-none border-b-2 border-white bg-transparent text-white transition-all duration-300 focus:border-lime-600 w-full px-2 py-1 pr-10"
                             type={showPassword ? "text" : "password"}
                             placeholder="******"
+                            onChange={(e) => setDados({ ...dados, senha: e.target.value })}
                             required
                             />
                         <button
@@ -54,7 +71,7 @@ function Login() {
                     </div>
 
                         <button className="bg-white font-bold mt-6 p-3 w-full transition-all duration-300 rounded-lg hover:scale-105 hover:bg-lime-600 hover:text-white cursor-pointer" type="submit">
-                        Logar
+                        {loading ? "Fazendo login..." : "Login"}
                         </button>
                     </form>
 
